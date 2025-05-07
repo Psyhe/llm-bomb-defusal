@@ -58,6 +58,7 @@ async def game_interaction(command: str) -> str:
         return res
 
     elif command.startswith(("cut", "press", "hold", "release")):
+        print("Particular command")
         result = bomb.do_action(command)
 
         if result == ActionResult.CHANGED:
@@ -74,10 +75,13 @@ async def game_interaction(command: str) -> str:
             return res
 
         elif result == ActionResult.DISARMED:
+            print("disarmed")
             return BOMB_DISARMED
         elif result == ActionResult.EXPLODED:
+            print("exploded")
             return BOMB_EXPLODED
 
+    print("Unknown command")
     return UNKNOWN_COMMAND
 
 
