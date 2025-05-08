@@ -199,7 +199,7 @@ class Defuser(BombClient):
             action = input("Enter Defuser command): ")
         response = await self.process_query("game_interaction", {"command": action})
         text = response.content[0].text
-        print(text)
+        # print(text)
         return text
         # YOUR CODE ENDS HERE
 
@@ -210,7 +210,7 @@ class Expert(BombClient):
         # YOUR CODE STARTS HERE
         response = await self.process_query("get_manual", {})
         text = response.content[0].text
-        print(text)
+        # print(text)
         return text
         # YOUR CODE ENDS HERE
 
@@ -229,9 +229,11 @@ async def main():
     try:
         while True:
             if args.role == "Defuser":
-                await client.run()
+                response = await client.run()
+                print(response)
             else:
-                await client.run()
+                response = await client.run()
+                print(response)
             await asyncio.sleep(0.1)
             
             cont = input("Do you want to continue? (yes/no): ").strip().lower()
