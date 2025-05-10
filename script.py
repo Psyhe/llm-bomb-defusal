@@ -3,7 +3,9 @@ import asyncio
 import os
 import signal
 import time
-from agents.prompts import expert_prompt, defuser_prompt
+# from agents.prompts import expert_prompt, defuser_prompt
+from agents.prompts import  get_expert_prompt, get_defuser_prompt
+
 from game_mcp.game_client import Defuser, Expert
 from agents.models import SmollLLM
 
@@ -11,16 +13,24 @@ import re
 from typing import List, Optional
 
 
+
 OUTPUT_DIR = "experiment_outputs"
+TRY_AGAIN = "Try again"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 SERVER_CMD = ["python", "-m", "game_mcp.game_server", "--host", "0.0.0.0", "--port", "8080"]
 
 # Expanded grid with temperature, top_p, top_k, and max_new_tokens
 PARAM_GRID = [
-    {"temperature": 0.3, "top_p": 0.95, "top_k": 1000, "max_new_tokens": 1000},
-    {"temperature": 0.7, "top_p": 0.9,  "top_k": 1000, "max_new_tokens": 1000},
-    {"temperature": 1.0, "top_p": 0.8,  "top_k": 1000, "max_new_tokens": 1000},
+    {"temperature": 0.3, "top_p": 0.9, "top_k": 600, "max_new_tokens": 900, "style": "standard"},
+    {"temperature": 0.7, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "standard"},
+    {"temperature": 1.0, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "standard"},
+    {"temperature": 0.3, "top_p": 0.9, "top_k": 600, "max_new_tokens": 900, "style": "json"},
+    {"temperature": 0.7, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "json"},
+    {"temperature": 1.0, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "json"},
+    {"temperature": 0.3, "top_p": 0.9, "top_k": 600, "max_new_tokens": 900, "style": "markdown"},
+    {"temperature": 0.7, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "markdown"},
+    {"temperature": 1.0, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "markdown"},
 ]
 
 def extract_final_line(prompt_output: str) -> str:
@@ -78,16 +88,40 @@ def extract_final_instruction(text: str, commands: List[str]) -> Optional[str]:
     for command in commands:
         if command in text_lower:
             return command
-    return "Try again"
+    return TRY_AGAIN
+        
+def detect_module_type(state_text: str) -> str:
+    """
+    Detects the module type from the given bomb state text.
 
-async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k, max_new_tokens, run_id):
+    :param state_text: The string containing the bomb state.
+    :return: The name of the module detected ("WIRE", "Simon", "Button", "Memory") or "UNKNOWN".
+    """
+    lower_text = state_text.lower()
+    if "wire" in lower_text:
+        return "WIRE"
+    elif "simon" in lower_text:
+        return "Simon"
+    elif "memory module" in lower_text:
+        return "Memory"
+    elif "the button module" in lower_text:
+        return "Button"
+    else:
+        return "UNKNOWN"
+    return TRY_AGAIN
+
+async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k, max_new_tokens, style, run_id):
     defuser_client = Defuser()
     expert_client = Expert()
     server_url = "http://0.0.0.0:8080"
 
     log_lines = []
     
-    max_attempts=5
+    attempt=1
+    level = 0
+    log_module = []
+    
+    filename = f"{OUTPUT_DIR}/run_{run_id}_T{temperature}_P{top_p}_K{top_k}_M{max_new_tokens}_{style}.txt"
 
     try:
         await defuser_client.connect_to_server(server_url)
@@ -112,8 +146,13 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
             log_lines.append("[EXPERT sees MANUAL]:")
             log_lines.append(manual_text)
             log_lines.append("\n")
+            
+            module_name = detect_module_type(manual_text)
+            
+            expert_prompt_fn = get_expert_prompt(style)
+            exp_messages = expert_prompt_fn(manual_text, bomb_state)
 
-            exp_messages = expert_prompt(manual_text, bomb_state)
+            # exp_messages = expert_prompt(manual_text, bomb_state)
             log_lines.append("[RECEIVED BY EXPERT]:")
             log_lines.append(str(exp_messages))
             log_lines.append("\n")
@@ -138,7 +177,10 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
             available_commands = extract_available_commands(bomb_state)
             list_of_commands=(extract_available_commands_list(available_commands))
 
-            def_messages = defuser_prompt(available_commands, expert_advice)
+
+            defuser_prompt_fn = get_defuser_prompt(style)
+            def_messages = defuser_prompt_fn(available_commands, expert_advice)
+            # def_messages = defuser_prompt(available_commands, expert_advice)
             def_action_raw = defuser_model.generate_response(
                 def_messages,
                 max_new_tokens=max_new_tokens,
@@ -166,36 +208,87 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
             result = await defuser_client.run(action)
             log_lines.append("[SERVER RESPONSE]:")
             log_lines.append(result)
-            log_lines.append("\n")
+            log_lines.append("\n")        
 
             if "BOMB SUCCESSFULLY DISARMED" in result or "BOMB HAS EXPLODED" in result:
+                # log_module.append("The last module:")
+                # log_module.append(module_name)
+                # log_module.append(str(max_attempts))
+                # log_module.append("\n")
+                level += 1
+                summary_log = (
+                    f'"{filename}",'
+                    f'"{temperature}",'
+                    f'"{top_p}",'
+                    f'"{top_k}",'
+                    f'"{max_new_tokens}",'
+                    f'"{level}",'
+                    f'"{module_name}",'
+                    f'"{attempt}",'
+                    f'"FAILED"\n'
+                )
+                
+                log_module.append(summary_log)
+                
                 break
             
-            max_attempts-=1
-            log_lines.append("\n")
-            log_lines.append(f"[ATTEMPT]: {max_attempts}")
+            if (action != TRY_AGAIN):
+                level += 1
+                summary_log = (
+                    f'"{filename}",'
+                    f'"{temperature}",'
+                    f'"{top_p}",'
+                    f'"{top_k}",'
+                    f'"{max_new_tokens}",'
+                    f'"{level}",'
+                    f'"{module_name}",'
+                    f'"{attempt}",'
+                    f'"PASSED"\n'
+                )
+                
+                log_module.append(summary_log)
+                attempt = 1
+            
+            attempt+=1
 
             print("*******************************")
             print("Attempts:\n")
-            print(max_attempts)
-            if max_attempts <= 0:
+            print(attempt)
+            if attempt >= 7:
                 break
 
     finally:
         await expert_client.cleanup()
         await defuser_client.cleanup()
 
-        filename = f"{OUTPUT_DIR}/run_{run_id}_T{temperature}_P{top_p}_K{top_k}_M{max_new_tokens}.txt"
+        # Save full detailed log
         with open(filename, "w") as f:
             f.write("\n".join(log_lines))
 
+        modules = "\n".join(log_module)
+
+        sum_path = os.path.join(OUTPUT_DIR, "experiment_summary.log")
+        with open(sum_path, "a") as f:
+            f.write(modules)
 
 def launch_server():
     return subprocess.Popen(SERVER_CMD, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, preexec_fn=os.setsid)
 
+
 def kill_server(proc):
     os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
 
+import socket
+
+def wait_for_server(host="0.0.0.0", port=8080, timeout=10):
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            with socket.create_connection((host, port), timeout=1):
+                return True
+        except OSError:
+            time.sleep(0.2)
+    raise RuntimeError("Server did not start in time.")
 
 async def main():
     print("Starting...")
@@ -205,9 +298,10 @@ async def main():
     run_id = 0
     for params in PARAM_GRID:
         run_id += 1
-        print(f"[RUN {run_id}] Temp: {params['temperature']} | Top-p: {params['top_p']} | Top-k: {params['top_k']} | Max Tokens: {params['max_new_tokens']}")
+        print(f"[RUN {run_id}] Temp: {params['temperature']} | Top-p: {params['top_p']} | Top-k: {params['top_k']} | Max Tokens: {params['max_new_tokens']} | Style: {params['style']}")
         proc = launch_server()
         time.sleep(3)
+        wait_for_server()
         try:
             await run_two_agents(
                 defuser_model, expert_model,
@@ -215,11 +309,12 @@ async def main():
                 top_p=params["top_p"],
                 top_k=params["top_k"],
                 max_new_tokens=params["max_new_tokens"],
+                style = params["style"],
                 run_id=run_id
             )
         finally:
             kill_server(proc)
-            time.sleep(5)
+            time.sleep(4)
 
 if __name__ == "__main__":
     asyncio.run(main())

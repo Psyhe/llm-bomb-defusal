@@ -1,0 +1,175 @@
+ 
+Experiment: experiment_outputs/run_1_T0.3_P0.95_K1000_M1000.txt, Temp: 0.3, Top-p: 0.95, Top-k: 1000, Max Tokens: 1000, Level Reached: 3, Number of attempts: 2Result: BOMB EXPLODED
+Solved modules: WIRE
+Button
+ButtonExperiment: experiment_outputs/run_1_T0.3_P0.95_K1000_M1000_standard.txt, Temp: 0.3, Top-p: 0.95, Top-k: 1000, Max Tokens: 1000, Level Reached: 4, Number of attempts: 3Result: BOMB EXPLODED
+Solved modules: WIRE
+Button
+Button
+SimonExperiment: experiment_outputs/run_2_T0.7_P0.9_K1000_M1000_standard.txt, Temp: 0.7, Top-p: 0.9, Top-k: 1000, Max Tokens: 1000, Level Reached: 1, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: WIREExperiment: experiment_outputs/run_3_T1.0_P0.8_K1000_M1000_standard.txt, Temp: 1.0, Top-p: 0.8, Top-k: 1000, Max Tokens: 1000, Level Reached: 3, Number of attempts: 2Result: BOMB EXPLODED
+Solved modules: WIRE
+WIRE
+ButtonExperiment: experiment_outputs/run_4_T0.3_P0.95_K1000_M1000_json.txt, Temp: 0.3, Top-p: 0.95, Top-k: 1000, Max Tokens: 1000, Level Reached: 3, Number of attempts: 2Result: BOMB EXPLODED
+Solved modules: WIRE
+Button
+SimonExperiment: experiment_outputs/run_5_T0.7_P0.9_K1000_M1000_json.txt, Temp: 0.7, Top-p: 0.9, Top-k: 1000, Max Tokens: 1000, Level Reached: 1, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: WIREExperiment: experiment_outputs/run_6_T0.3_P0.95_K1000_M1000_markdown.txt, Temp: 0.3, Top-p: 0.95, Top-k: 1000, Max Tokens: 1000, Level Reached: 1, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: WIREExperiment: experiment_outputs/run_7_T0.7_P0.9_K1000_M1000_markdown.txt, Temp: 0.7, Top-p: 0.9, Top-k: 1000, Max Tokens: 1000, Level Reached: 2, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+WIREExperiment: experiment_outputs/run_1_T0.3_P0.9_K100_M200_standard.txt, Temp: 0.3, Top-p: 0.9, Top-k: 100, Max Tokens: 200, Level Reached: 1, Number of attempts: 6Result: BOMB EXPLODED
+Solved modules: WIRE
+WIRE
+WIRE
+WIRE
+WIRE
+WIRE
+WIREExperiment: experiment_outputs/run_2_T0.7_P0.9_K100_M200_standard.txt, Temp: 0.7, Top-p: 0.9, Top-k: 100, Max Tokens: 200, Level Reached: 0, Number of attempts: 0Result: UNKNOWN
+Solved modules: Experiment: experiment_outputs/run_1_T0.3_P0.9_K100_M200_standard.txt, Temp: 0.3, Top-p: 0.9, Top-k: 100, Max Tokens: 200, Level Reached: 4, Number of attempts: 6Result: BOMB EXPLODED
+Solved modules: WIRE
+WIRE
+Button
+Button
+Button
+Button
+SimonExperiment: experiment_outputs/run_2_T0.7_P0.9_K100_M200_standard.txt, Temp: 0.7, Top-p: 0.9, Top-k: 100, Max Tokens: 200, Level Reached: 0, Number of attempts: 0Result: UNKNOWN
+Solved modules: Experiment: experiment_outputs/run_1_T0.3_P0.9_K300_M500_standard.txt, Temp: 0.3, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 1, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: WIREExperiment: experiment_outputs/run_2_T0.7_P0.9_K300_M500_standard.txt, Temp: 0.7, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 1, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: WIREExperiment: experiment_outputs/run_3_T1.0_P0.9_K300_M500_standard.txt, Temp: 1.0, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 1, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: WIREExperiment: experiment_outputs/run_4_T0.3_P0.9_K300_M500_json.txt, Temp: 0.3, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 3, Number of attempts: 2Result: BOMB EXPLODED
+Solved modules: WIRE
+Button
+ButtonExperiment: experiment_outputs/run_5_T0.7_P0.9_K300_M500_json.txt, Temp: 0.7, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 0, Number of attempts: 0Result: UNKNOWN
+Solved modules: Experiment: experiment_outputs/run_1_T0.3_P0.9_K300_M500_standard.txt, Temp: 0.3, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 2, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+ 
+0
+
+
+Button
+ 
+1
+
+Experiment: experiment_outputs/run_2_T0.7_P0.9_K300_M500_standard.txt, Temp: 0.7, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 0, Number of attempts: 0Result: UNKNOWN
+Solved modules: Experiment: experiment_outputs/run_1_T0.3_P0.9_K300_M500_standard.txt, Temp: 0.3, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 2, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+ 
+0
+
+
+Button
+ 
+2
+
+Experiment: experiment_outputs/run_2_T0.7_P0.9_K300_M500_standard.txt, Temp: 0.7, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 0, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: Experiment: experiment_outputs/run_3_T1.0_P0.9_K300_M500_standard.txt, Temp: 1.0, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 1, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+ 
+0
+
+Experiment: experiment_outputs/run_4_T0.3_P0.9_K300_M500_json.txt, Temp: 0.3, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 1, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+ 
+0
+
+Experiment: experiment_outputs/run_5_T0.7_P0.9_K300_M500_json.txt, Temp: 0.7, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 1, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+ 
+0
+
+Experiment: experiment_outputs/run_6_T1.0_P0.9_K300_M500_json.txt, Temp: 1.0, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 0, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: Experiment: experiment_outputs/run_7_T0.3_P0.9_K300_M500_markdown.txt, Temp: 0.3, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 0, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: Experiment: experiment_outputs/run_8_T0.7_P0.9_K300_M500_markdown.txt, Temp: 0.7, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 0, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: Experiment: experiment_outputs/run_9_T1.0_P0.9_K300_M500_markdown.txt, Temp: 1.0, Top-p: 0.9, Top-k: 300, Max Tokens: 500, Level Reached: 1, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+ 
+0
+
+Experiment: experiment_outputs/run_1_T0.3_P0.8_K600_M900_standard.txt, Temp: 0.3, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 2, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+ 
+1
+
+
+Button
+ 
+1
+
+Experiment: experiment_outputs/run_1_T0.3_P0.8_K600_M900_standard.txt, Temp: 0.3, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 1, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+1
+
+
+The last module:
+Button
+1
+
+******************************************************************************************************************Experiment: experiment_outputs/run_2_T0.7_P0.8_K600_M900_standard.txt, Temp: 0.7, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 0, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: The last module:
+WIRE
+0
+
+******************************************************************************************************************Experiment: experiment_outputs/run_3_T1.0_P0.8_K600_M900_standard.txt, Temp: 1.0, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 3, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+0
+
+
+Button
+1
+
+
+Button
+1
+
+
+The last module:
+Simon
+1
+
+******************************************************************************************************************Experiment: experiment_outputs/run_4_T0.3_P0.8_K600_M900_json.txt, Temp: 0.3, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 1, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+0
+
+
+The last module:
+Button
+1
+
+******************************************************************************************************************Experiment: experiment_outputs/run_5_T0.7_P0.8_K600_M900_json.txt, Temp: 0.7, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 1, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+0
+
+
+The last module:
+Button
+1
+
+******************************************************************************************************************Experiment: experiment_outputs/run_6_T1.0_P0.8_K600_M900_json.txt, Temp: 1.0, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 0, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: The last module:
+WIRE
+0
+
+******************************************************************************************************************Experiment: experiment_outputs/run_7_T0.3_P0.8_K600_M900_markdown.txt, Temp: 0.3, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 2, Number of attempts: 1Result: BOMB EXPLODED
+Solved modules: WIRE
+0
+
+
+Button
+1
+
+
+The last module:
+Button
+1
+
+******************************************************************************************************************Experiment: experiment_outputs/run_8_T0.7_P0.8_K600_M900_markdown.txt, Temp: 0.7, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 0, Number of attempts: 0Result: BOMB EXPLODED
+Solved modules: The last module:
+WIRE
+0
+
+******************************************************************************************************************Experiment: experiment_outputs/run_9_T1.0_P0.8_K600_M900_markdown.txt, Temp: 1.0, Top-p: 0.8, Top-k: 600, Max Tokens: 900, Level Reached: 0, Number of attempts: 2Result: BOMB EXPLODED
+Solved modules: The last module:
+WIRE
+2
+
+******************************************************************************************************************
