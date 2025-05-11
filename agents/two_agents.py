@@ -44,18 +44,7 @@ async def run_two_agents(
 
             # 4) Expert LLM uses the manual text + defuser’s question (bomb_state)
             #    to generate instructions
-            print("before prompt")
-            print("**************")
             exp_messages = expert_prompt(manual_text, bomb_state)
-            print("after")
-            # expert_advice = expert_model.generate_response(
-            #     exp_messages,
-            #     max_new_tokens=max_new_tokens,
-            #     temperature=0.7,
-            #     top_p=0.9,
-            #     top_k=50,
-            #     do_sample=True
-            # )
             
             expert_advice = expert_model.generate_response(
                 exp_messages,
@@ -66,7 +55,6 @@ async def run_two_agents(
                 do_sample=True
             )
 
-            print("=---------------------")
             print("\n[EXPERT ADVICE to DEFUSER]:")
             print(expert_advice)
 
@@ -107,11 +95,11 @@ async def run_two_agents(
 
 if __name__ == "__main__":
 
-    defuser_checkpoint = "HuggingFaceTB/SmolLM-135M-Instruct"
-    expert_checkpoint = "HuggingFaceTB/SmolLM-135M-Instruct"
+    # defuser_checkpoint = "HuggingFaceTB/SmolLM-135M-Instruct"
+    # expert_checkpoint = "HuggingFaceTB/SmolLM-135M-Instruct"
 
-    # defuser_checkpoint = "Qwen/Qwen3-0.6B"
-    # expert_checkpoint = "Qwen/Qwen3-0.6B"
+    defuser_checkpoint = "Qwen/Qwen3-0.6B"
+    expert_checkpoint = "Qwen/Qwen3-0.6B"
 
     defuser_model = SmollLLM(defuser_checkpoint, device="cuda")
     expert_model = SmollLLM(expert_checkpoint, device="cuda")

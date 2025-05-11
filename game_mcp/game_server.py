@@ -7,6 +7,7 @@ from starlette.applications import Starlette
 from mcp.server.sse import SseServerTransport
 from starlette.requests import Request
 from starlette.routing import Mount, Route
+import random
 
 from game.bomb import Bomb
 from game.modules.module import ActionResult
@@ -97,6 +98,7 @@ async def get_manual() -> str:
 
 
 def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlette:
+    # random.seed(42) 
     """Create a Starlette application that can server the provied mcp server with SSE."""
     sse = SseServerTransport("/session_id/")
 

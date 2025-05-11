@@ -16,8 +16,10 @@ from crewai_bomb.tools import ExpertTool, DefuserTool
 
 def run_crewai_bomb(server_url: str):
     # Initialize tools
+    print("Starting run")
     expert_tool = ExpertTool(server_url=server_url)
     defuser_tool = DefuserTool(server_url=server_url)
+    print("tools created")
 
     # Define agents
     expert_agent = Agent(
@@ -43,6 +45,8 @@ def run_crewai_bomb(server_url: str):
         allow_delegation=False,
         tools=[defuser_tool]
     )
+    print("agents created")
+
 
     # Define task
     task = Task(
@@ -53,9 +57,9 @@ def run_crewai_bomb(server_url: str):
         ),
         agents=[expert_agent, defuser_agent]
     )
+    print("task created")
 
-    # LLM config (use gpt-3.5-turbo or whatever model you have)
-    llm = LLM(model="gpt-3.5-turbo", temperature=0.2)
+    llm = LLM(model="ollama/qwen2.5:1.5b", temperature=0.2)
 
     # Create crew
     crew = Crew(
@@ -63,6 +67,7 @@ def run_crewai_bomb(server_url: str):
         tasks=[task],
         llm=llm
     )
+    print("crew created")
 
     # Kick off!
     result = crew.kickoff()
@@ -72,6 +77,7 @@ def run_crewai_bomb(server_url: str):
 if __name__ == '__main__':
     import argparse
 
+    print("Starting main...")
     parser = argparse.ArgumentParser(description="Run CrewAI Bomb Defusal")
     parser.add_argument('--url', required=True, help='Server URL (e.g., http://localhost:8080)')
     args = parser.parse_args()

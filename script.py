@@ -3,6 +3,8 @@ import asyncio
 import os
 import signal
 import time
+import socket
+
 # from agents.prompts import expert_prompt, defuser_prompt
 from agents.prompts import  get_expert_prompt, get_defuser_prompt
 
@@ -20,30 +22,27 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 SERVER_CMD = ["python", "-m", "game_mcp.game_server", "--host", "0.0.0.0", "--port", "8080"]
 
-# Expanded grid with temperature, top_p, top_k, and max_new_tokens
 PARAM_GRID = [
-    {"temperature": 0.3, "top_p": 0.9, "top_k": 600, "max_new_tokens": 900, "style": "standard"},
-    {"temperature": 0.7, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "standard"},
-    {"temperature": 1.0, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "standard"},
-    {"temperature": 0.3, "top_p": 0.9, "top_k": 600, "max_new_tokens": 900, "style": "json"},
-    {"temperature": 0.7, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "json"},
-    {"temperature": 1.0, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "json"},
-    {"temperature": 0.3, "top_p": 0.9, "top_k": 600, "max_new_tokens": 900, "style": "markdown"},
-    {"temperature": 0.7, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "markdown"},
-    {"temperature": 1.0, "top_p": 0.9,  "top_k": 600, "max_new_tokens": 900, "style": "markdown"},
+    {"temperature": 0.3, "top_p": 0.9, "top_k": 100, "max_new_tokens": 200, "style": "standard"},
+    {"temperature": 0.7, "top_p": 0.9,  "top_k": 100, "max_new_tokens": 200, "style": "standard"},
+    {"temperature": 1.0, "top_p": 0.9,  "top_k": 100, "max_new_tokens": 200, "style": "standard"},
+    {"temperature": 0.3, "top_p": 0.9, "top_k": 100, "max_new_tokens": 200, "style": "json"},
+    {"temperature": 0.7, "top_p": 0.9,  "top_k": 100, "max_new_tokens": 200, "style": "json"},
+    {"temperature": 1.0, "top_p": 0.9,  "top_k": 100, "max_new_tokens": 200, "style": "json"},
+    {"temperature": 0.3, "top_p": 0.9, "top_k": 100, "max_new_tokens": 200, "style": "markdown"},
+    {"temperature": 0.7, "top_p": 0.9,  "top_k": 100, "max_new_tokens": 200, "style": "markdown"},
+    {"temperature": 1.0, "top_p": 0.9,  "top_k": 100, "max_new_tokens": 200, "style": "markdown"},
 ]
 
 def extract_final_line(prompt_output: str) -> str:
     lines = prompt_output.strip().splitlines()
     for i in range(len(lines) - 1, -1, -1):
         line = lines[i].strip()
-        # Remove inline <|im_end|> if present
         if "<|im_end|>" in line:
             line = line.split("<|im_end|>")[0].strip()
-        # Skip empty lines and lines starting with "<"
         if line and not line.startswith("<"):
             return line
-    return "help"  # fallback if nothing is found
+    return "help"
 
 def extract_available_commands(state_text: str) -> str:
     """
@@ -52,7 +51,7 @@ def extract_available_commands(state_text: str) -> str:
     marker = "Available commands:"
     index = state_text.find(marker)
     if index == -1:
-        return ""  # Marker not found
+        return ""
     return state_text[index:].strip()
 
 def extract_available_commands_list(text: str) -> List[str]:
@@ -78,11 +77,11 @@ def extract_available_commands_list(text: str) -> List[str]:
 
 def extract_final_instruction(text: str, commands: List[str]) -> Optional[str]:
     """
-    Check if the input text contains any of the wire cut commands, and return the correct response.
+    Check if the input text contains any of the commands, and returns the order found.
 
     :param text: The input line to check.
     :param commands: A list of valid commands (e.g., ['cut wire 1', 'cut wire 2', ...]).
-    :return: A formatted response if a match is found; otherwise, None.
+    :return: A formatted response if a match is found; otherwise tries again.
     """
     text_lower = text.lower()
     for command in commands:
@@ -108,7 +107,6 @@ def detect_module_type(state_text: str) -> str:
         return "Button"
     else:
         return "UNKNOWN"
-    return TRY_AGAIN
 
 async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k, max_new_tokens, style, run_id):
     defuser_client = Defuser()
@@ -152,7 +150,6 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
             expert_prompt_fn = get_expert_prompt(style)
             exp_messages = expert_prompt_fn(manual_text, bomb_state)
 
-            # exp_messages = expert_prompt(manual_text, bomb_state)
             log_lines.append("[RECEIVED BY EXPERT]:")
             log_lines.append(str(exp_messages))
             log_lines.append("\n")
@@ -180,7 +177,6 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
 
             defuser_prompt_fn = get_defuser_prompt(style)
             def_messages = defuser_prompt_fn(available_commands, expert_advice)
-            # def_messages = defuser_prompt(available_commands, expert_advice)
             def_action_raw = defuser_model.generate_response(
                 def_messages,
                 max_new_tokens=max_new_tokens,
@@ -211,10 +207,6 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
             log_lines.append("\n")        
 
             if "BOMB SUCCESSFULLY DISARMED" in result or "BOMB HAS EXPLODED" in result:
-                # log_module.append("The last module:")
-                # log_module.append(module_name)
-                # log_module.append(str(max_attempts))
-                # log_module.append("\n")
                 level += 1
                 summary_log = (
                     f'"{filename}",'
@@ -251,9 +243,6 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
             
             attempt+=1
 
-            print("*******************************")
-            print("Attempts:\n")
-            print(attempt)
             if attempt >= 7:
                 break
 
@@ -261,12 +250,13 @@ async def run_two_agents(defuser_model, expert_model, temperature, top_p, top_k,
         await expert_client.cleanup()
         await defuser_client.cleanup()
 
-        # Save full detailed log
+        # Detailed log
         with open(filename, "w") as f:
             f.write("\n".join(log_lines))
 
         modules = "\n".join(log_module)
 
+        # Log for analysis
         sum_path = os.path.join(OUTPUT_DIR, "experiment_summary.log")
         with open(sum_path, "a") as f:
             f.write(modules)
@@ -277,8 +267,6 @@ def launch_server():
 
 def kill_server(proc):
     os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-
-import socket
 
 def wait_for_server(host="0.0.0.0", port=8080, timeout=10):
     start_time = time.time()
